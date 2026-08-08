@@ -1,0 +1,10 @@
+{
+  "agent": "content-strategija",
+  "questions": [
+    { "id": "web", "label": "Web stranica", "type": "url", "required": true },
+    { "id": "social", "label": "Instagram/LinkedIn profil", "type": "url", "required": true },
+    { "id": "teme", "label": "Koje teme najčešće spominješ u sadržaju?", "type": "text" },
+    { "id": "vec_dobro", "label": "Postoji li sadržaj koji je već dobro prošao?", "type": "text" },
+    { "id": "ton", "label": "Kako bi opisao/la svoj ton komunikacije (npr. direktan, topao, stručan)?", "type": "text" }
+  ]
+}
