@@ -1,15 +1,10 @@
 import { google } from "googleapis";
-import { readFileSync } from "node:fs";
+import { getServiceAccountCredentials } from "./google-auth.ts";
 
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
 
 function getAuth() {
-  const keyPath = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
-  if (!keyPath) {
-    throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY_PATH nije postavljen u .env.local");
-  }
-  const key = JSON.parse(readFileSync(keyPath, "utf-8"));
-  return new google.auth.GoogleAuth({ credentials: key, scopes: SCOPES });
+  return new google.auth.GoogleAuth({ credentials: getServiceAccountCredentials(), scopes: SCOPES });
 }
 
 function driveClient() {

@@ -18,13 +18,24 @@ export const metadata: Metadata = {
   description: "Dashboard za Expert Launch Delivery Sustav",
 };
 
+const THEME_INIT_SCRIPT = `
+  (function () {
+    var stored = localStorage.getItem("theme");
+    var dark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.classList.toggle("dark", dark);
+  })();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="hr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-black">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
+      <body className="min-h-full flex flex-col bg-background text-foreground">
         <Nav />
         <main className="flex flex-1 flex-col">{children}</main>
       </body>

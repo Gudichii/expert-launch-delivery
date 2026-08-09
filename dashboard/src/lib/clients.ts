@@ -1,4 +1,5 @@
 import { AGENTS, type AgentStatus } from "./agents";
+import { getAllRows } from "../../../agents/shared/google-sheets-client";
 
 export interface ClientRow {
   klijentId: string;
@@ -9,13 +10,34 @@ export interface ClientRow {
   overallStatus: string;
 }
 
-/**
- * TODO: zamijeniti stvarnim čitanjem iz Google Sheets "Status" taba
- * (shema u CLAUDE.md sekcija 4) preko agents/shared/google-sheets-client.ts.
- * Za sada vraća prazan niz — nema mock/fake klijenata u produkcijskom kodu.
- */
+/** Čita klijente iz Google Sheets "Status" taba, shema u CLAUDE.md sekcija 4. */
 export async function getClients(): Promise<ClientRow[]> {
-  return [];
+  const rows = await getAllRows();
+  const [header, ...dataRows] = rows;
+  if (!header) return [];
+
+  const colIndex = (name: string) => header.indexOf(name);
+  const idIdx = colIndex("klijent_id");
+
+  return dataRows
+    .filter((row) => row[idIdx])
+    .map((row) => {
+      const statusi = Object.fromEntries(
+        AGENTS.map((a) => {
+          const i = colIndex(a.statusKolona);
+          const val = i >= 0 ? row[i] : undefined;
+          return [a.statusKolona, (val || "čeka") as AgentStatus];
+        })
+      );
+      return {
+        klijentId: row[idIdx],
+        ime: row[colIndex("ime")] ?? "",
+        nisa: row[colIndex("niša")] ?? "",
+        datumStarta: row[colIndex("datum_starta")] ?? "",
+        statusi,
+        overallStatus: row[colIndex("overall_status")] ?? "",
+      };
+    });
 }
 
 export async function getClient(klijentId: string): Promise<ClientRow | undefined> {
