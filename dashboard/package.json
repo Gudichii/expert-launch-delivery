@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "cd .. && npm install"
   },
   "dependencies": {
     "googleapis": "^144.0.0",
